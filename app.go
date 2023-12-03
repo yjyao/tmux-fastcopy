@@ -167,8 +167,7 @@ type ctrl struct {
 
 func (c *ctrl) Init() {
 	base := tcell.StyleDefault.
-		Background(tcell.ColorBlack).
-		Foreground(tcell.ColorWhite)
+		Foreground(tcell.ColorDimGray)
 
 	c.w = (&fastcopy.WidgetConfig{
 		Text:         c.Text,
@@ -178,7 +177,7 @@ func (c *ctrl) Init() {
 		Style: fastcopy.Style{
 			Normal:         base,
 			Match:          base.Foreground(tcell.ColorGreen),
-			SkippedMatch:   base.Foreground(tcell.ColorGray),
+			SkippedMatch:   base.Foreground(tcell.ColorDimGray),
 			HintLabel:      base.Foreground(tcell.ColorRed),
 			HintLabelInput: base.Foreground(tcell.ColorYellow),
 			SelectedMatch:  base.Foreground(tcell.ColorYellow),
