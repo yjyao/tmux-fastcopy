@@ -127,6 +127,9 @@ The following flags are available:
 		path to tmux executable.
 			-tmux /usr/bin/tmux
 		Searches $PATH for tmux by default.
+	-tailhint
+		places hints/labels towards the end of the matched text.
+		Defaults to false (hints are at the beginning of the matched text).
 	-log FILE
 		file to write logs to.
 		Uses stderr by default.

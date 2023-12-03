@@ -51,6 +51,9 @@ type Style struct {
 	// Multi-select mode:
 	SelectedMatch tcell.Style // one of the selected matches
 	DeselectLabel tcell.Style // label for deselection
+
+	// Whether to place the hint at the end or beginning of the matched text.
+	TailHint bool
 }
 
 // Selection is a choice made by the user in the fastcopy UI.
@@ -299,6 +302,7 @@ func (w *Widget) annotateText() {
 			Skipped:    w.style.SkippedMatch,
 			Label:      w.style.HintLabel,
 			LabelTyped: w.style.HintLabelInput,
+			TailHint:   w.style.TailHint,
 		}
 
 		if hint.Selected {

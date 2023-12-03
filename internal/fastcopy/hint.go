@@ -86,6 +86,9 @@ type AnnotationStyle struct {
 
 	// Part of a multi-character label that the user has already typed.
 	LabelTyped tcell.Style
+
+	// Whether to place the hint at the end or beginning of the matched text.
+	TailHint bool
 }
 
 func (h *hint) Annotations(input string, style AnnotationStyle) (anns []ui.TextAnnotation) {
@@ -101,40 +104,53 @@ func (h *hint) Annotations(input string, style AnnotationStyle) (anns []ui.TextA
 
 	for _, match := range h.Matches {
 		pos := match.Range
+		offset := pos.Start
+		if style.TailHint {
+			offset = pos.End - len(h.Label)
+			if pos.End-len(h.Label) < pos.Start {
+				offset = pos.Start
+			}
+		}
+
+		// Highlight matched text before annotations (if any).
+		if offset > pos.Start {
+			anns = append(anns, ui.StyleTextAnnotation{
+				Offset: pos.Start,
+				Length: offset - pos.Start,
+				Style:  matchStyle,
+			})
+		}
+
 		// Show the label only if there's no input, or if the input
 		// matches all or part of the label.
+		// NOTE: Moves offset forward if matched.
 		if matched {
-			i := 0
-
 			// Highlight the portion of the label already typed by
 			// the user.
 			if len(input) > 0 {
 				anns = append(anns, ui.OverlayTextAnnotation{
-					Offset:  pos.Start,
+					Offset:  offset,
 					Overlay: input,
 					Style:   style.LabelTyped,
 				})
-				i += len(input)
 			}
 
 			// Highlight the portion of the label yet to be typed.
-			if i < len(h.Label) {
+			if len(input) < len(h.Label) {
 				anns = append(anns, ui.OverlayTextAnnotation{
-					Offset:  pos.Start + len(input),
-					Overlay: h.Label[i:],
+					Offset:  offset + len(input),
+					Overlay: h.Label[len(input):],
 					Style:   style.Label,
 				})
 			}
-
-			pos.Start += len(h.Label)
+			offset += len(h.Label)
 		}
 
-		// Don't show the rest of the matched text if the label is
-		// longer than the text.
-		if pos.End > pos.Start {
+		// Highlight matched text after annotations (if any).
+		if pos.End > offset {
 			anns = append(anns, ui.StyleTextAnnotation{
-				Offset: pos.Start,
-				Length: pos.End - pos.Start,
+				Offset: offset,
+				Length: pos.End - offset,
 				Style:  matchStyle,
 			})
 		}

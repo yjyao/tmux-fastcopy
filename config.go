@@ -83,6 +83,7 @@ type config struct {
 	Regexes     regexes
 	Tmux        string
 	LogFile     string
+	TailHint    bool
 }
 
 // Generates a new default configuration.
@@ -104,6 +105,7 @@ func (c *config) RegisterFlags(flag *flag.FlagSet) {
 	flag.BoolVar(&c.Verbose, "verbose", false, "")
 	flag.StringVar(&c.LogFile, "log", "", "")
 	flag.StringVar(&c.Tmux, "tmux", "tmux", "")
+	flag.BoolVar(&c.TailHint, "tailhint", false, "")
 }
 
 func (c *config) RegisterOptions(load *tmuxopt.Loader) {
@@ -111,6 +113,7 @@ func (c *config) RegisterOptions(load *tmuxopt.Loader) {
 	load.StringVar(&c.ShiftAction, "@fastcopy-shift-action")
 	load.Var(&c.Alphabet, "@fastcopy-alphabet")
 	load.MapVar(&c.Regexes, "@fastcopy-regex-")
+	load.BoolVar(&c.TailHint, "@fastcopy-tail-hint")
 }
 
 // FillFrom updates this config object, filling empty values with values from
@@ -136,6 +139,7 @@ func (c *config) FillFrom(o *config) {
 	}
 	c.Regexes.FillFrom(o.Regexes)
 	c.Verbose = c.Verbose || o.Verbose
+	c.TailHint = c.TailHint || o.TailHint
 }
 
 // Flags rebuilds a list of arguments from which this configuration may be
@@ -163,6 +167,9 @@ func (c *config) Flags() []string {
 	}
 	if len(c.Tmux) > 0 {
 		args = append(args, "-tmux", c.Tmux)
+	}
+	if c.TailHint {
+		args = append(args, "-tailhint")
 	}
 	return args
 }

@@ -93,6 +93,7 @@ func (app *app) Run(cfg *config) error {
 		Text:     string(bs),
 		Alphabet: []rune(cfg.Alphabet),
 		Matcher:  matcher,
+		TailHint: cfg.TailHint,
 	}
 	ctrl.Init()
 
@@ -159,6 +160,7 @@ type ctrl struct {
 	Alphabet []rune
 	Text     string
 	Matcher  matcher
+	TailHint bool
 
 	w   *fastcopy.Widget
 	ui  *ui.App
@@ -182,6 +184,7 @@ func (c *ctrl) Init() {
 			HintLabelInput: base.Foreground(tcell.ColorYellow),
 			SelectedMatch:  base.Foreground(tcell.ColorYellow),
 			DeselectLabel:  base.Foreground(tcell.ColorDarkRed),
+			TailHint:       c.TailHint,
 		},
 	}).Build()
 
