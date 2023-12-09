@@ -9,6 +9,7 @@
   - [`@fastcopy-action`](#fastcopy-action)
   - [`@fastcopy-shift-action`](#fastcopy-shift-action)
   - [`@fastcopy-alphabet`](#fastcopy-alphabet)
+  - [`@fastcopy-tail-hint`](#fastcopy-tail-hint)
   - [`@fastcopy-regex-*`](#fastcopy-regex-)
     - [Regex names](#regex-names)
 - [How to](#how-to)
@@ -296,6 +297,15 @@ the following.
 
 ```
 set-option -g @fastcopy-alphabet asdfghjkl
+```
+
+### `@fastcopy-tail-hint`
+
+Toggles whether to place the hint labels towards the end of the matched text
+instead of at the beginning (default).
+
+```
+set-option -g @fastcopy-tail-hint 'true'
 ```
 
 ### `@fastcopy-regex-*`
